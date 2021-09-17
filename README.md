@@ -13,8 +13,8 @@ Finalmente, una vez logrados los 3 objetivos, se mostrará un mensaje de GANADOR
 abrirá la caja a través del servo motor.
 
 Creado por:
-De Lisa, Fabrizio.
-De Lorenzi, Lucas.
+Fabrizio De Lisa
+Lucas De Lorenzi
 
 Link al simulador virtual del proyecto: 
 https://www.tinkercad.com/things/7EMK77B8f92-proyecto-caja-china/editel?sharecode=3xN77a4WEA05JnGNv2WhLd-s7Nafm-FBardDXH6SpYM
