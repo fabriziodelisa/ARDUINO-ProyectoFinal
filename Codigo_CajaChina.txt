@@ -1,0 +1,499 @@
+#include <Servo.h>
+
+#include <LiquidCrystal.h>
+
+#include <Adafruit_NeoPixel.h>
+
+const int PIEZO = 3;
+const int TIRALED = 13; 
+const int SERVO = 6;
+const int NUMLED=14;  
+const int KEY1 = 2;
+int MELOD=4;	
+
+//DISPLAY
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+//LEDS
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMLED, TIRALED, NEO_GRB + NEO_KHZ800);
+//SERVO
+Servo servo;
+
+//REPERTORIO DE NOTAS MUSICALES UTILIZADAS
+const int NOTE_C4 = 262;
+const int NOTE_F4 = 349;
+const int NOTE_G4 = 392;
+const int NOTE_A4 = 440;
+const int NOTE_AS4= 466;
+const int NOTE_B4 = 494;
+const int NOTE_C5 = 523;
+const int NOTE_D5 = 587;
+const int NOTE_DS5= 622;
+const int NOTE_E5 = 659;
+const int NOTE_F5 = 698;
+
+//Puzzle 1
+bool start;
+int choice;
+
+//puzzle 2
+int VALIDACION_RGB[] = {0, 2, 2, 2};
+const int POSICION_LED[] ={0,1,2,3}; 
+int I = 0;
+int Z = 0;
+int FIN = 0;
+
+//Puzzle 3
+int redColor = 0;
+int greenColor = 0;
+int blueColor = 0;
+
+int pitchNote = NOTE_E5;
+int testNote = 0;
+
+//validacion de puzzles
+bool puzzle1 = false;
+bool puzzle2 = false;
+bool puzzle3 = false;
+
+//Melodias puzzles 1 y 3
+int melodyTurtles[] = {
+
+  NOTE_G4, NOTE_A4, NOTE_G4, NOTE_A4, NOTE_C4, NOTE_A4, NOTE_G4, NOTE_G4, NOTE_A4, NOTE_AS4, NOTE_C5, NOTE_AS4, NOTE_C5, NOTE_AS4, NOTE_C5, NOTE_AS4, NOTE_AS4, NOTE_C5, NOTE_F4, NOTE_F5, NOTE_DS5, NOTE_F5, NOTE_DS5, NOTE_F5, NOTE_DS5, NOTE_DS5, NOTE_F5, NOTE_C5, NOTE_C5, NOTE_C5, NOTE_C5, NOTE_AS4, NOTE_C5, NOTE_C5, NOTE_C5, NOTE_C5
+};
+
+int noteDurationsTurtles[] = {
+
+  4, 4, 4, 4, 4, 8, 4, 8, 4, 
+  4, 4, 4, 4, 4, 8, 4, 8, 4, 
+  4, 4, 4, 4, 4, 8, 4, 8, 4, 
+  8, 8, 8, 8, 4, 2, 8, 8, 4 
+};
+
+int furElise[] = {
+
+  NOTE_E5, NOTE_DS5, NOTE_E5, NOTE_DS5, NOTE_E5, NOTE_B4, NOTE_D5, NOTE_C5, NOTE_A4
+};
+int melody[] = {
+
+  NOTE_A4, NOTE_C5, NOTE_D5, NOTE_B4, NOTE_E5, NOTE_DS5, NOTE_E5, NOTE_DS5, NOTE_E5
+};
+
+int noteDurations[] = {
+
+  4, 4, 4, 4, 4, 4, 4, 4, 4
+};
+
+
+void setup()
+{  
+  bool start=false;
+  
+  pinMode(PIEZO, OUTPUT);
+  pinMode(MELOD, INPUT);
+  pinMode(KEY1, INPUT);
+ 
+  lcd.begin(16,2);
+  lcd.setCursor(0,0);
+  pixels.begin();
+  servo.attach(SERVO);
+  servo.write(0);
+}
+
+void loop()
+{
+
+  bool estado_MELOD = digitalRead(MELOD);
+  
+  if ((estado_MELOD == HIGH)&&(puzzle1==false)&&(puzzle2==false)&&(puzzle3==false)){
+    if (start==false){
+      lcd.clear();
+      lcd.setCursor(4,0);
+      lcd.print("Comienza");
+      lcd.setCursor(3,1);
+      lcd.print("el juego!");
+      delay(500);
+      start=true;
+    }
+  
+  delay(1000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Que tal tu oido?");
+  lcd.setCursor(0,1);
+  lcd.print("Que melodia es?");
+  delay(2000);
+  lcd.clear();
+  puzzle_1();
+    
+  }
+
+
+  if ((puzzle1 == true) && (puzzle2 == false) && (puzzle3 == false))
+  {
+    puzzle_2();
+  }
+  
+  if ((puzzle1 == true) && (puzzle2 == true) && (puzzle3 == false))
+  {
+    puzzle_3();
+  }
+
+  if ((estado_MELOD == HIGH)&&(puzzle1 == true) && (puzzle2 == true) &&(puzzle3 == false))  //no entiendo si es parte del juego3
+  {
+   melod();	
+  }
+
+
+  if ((puzzle1 == true) && (puzzle2 == true) && (puzzle3 == true))
+  {
+  servo.write(90);		 // servo cuando termina el juego
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("FELICITACIONES!");
+  lcd.setCursor(0,1);
+  lcd.print("ABRISTE LA CAJA!");
+  delay(6000);
+  }  
+}
+
+  
+  void puzzle_1()
+  {
+    do
+    {  
+      turtles();
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("1 Indiana Jones");
+      lcd.setCursor(0, 1);
+      lcd.print("2 Volver futuro");
+      delay(3000);
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("3 Star Wars");    
+      lcd.setCursor(0, 1);
+      lcd.print("4 Tortugas ninja");
+      delay(3000);
+      lcd.clear();
+      choice=0;
+      while(choice==0){
+      choice = map(analogRead(A5),0,1023,0,5); 
+      }
+      switch (choice){
+                
+        case 1:
+        lcd.setCursor(3,0);
+        lcd.print("Buena oreja!");
+        delay(2000);
+        lcd.clear();
+        lcd.setCursor(3,0);							
+        lcd.print("Ganaste el");
+        lcd.setCursor(0,1);
+        lcd.print("primer desafio!");
+        delay(2000);
+        lcd.clear();
+        puzzle1=true;
+        break;
+        
+        case 2:
+        lcd.setCursor(2,0);
+        lcd.print("La fuerza no");
+        lcd.setCursor(1,1);
+        lcd.print("esta contigo...");
+        delay(2000);
+        break;  
+        
+        case 3:
+        lcd.setCursor(2,0);
+        lcd.print("Viajar en el");
+        lcd.setCursor(0,1);
+        lcd.print("tiempo mata oido");
+        delay(2000);
+        break;  
+        
+        case 5:
+        lcd.setCursor(0,0);
+        lcd.print("Casi enlazas,");
+        lcd.setCursor(3,1);
+        lcd.print("pero no");
+        delay(2000);
+        break;
+        
+      }
+    }while(puzzle1==false);
+  }
+
+
+void puzzle_2()
+{
+   do
+  {
+   if(FIN == 0)
+    {  
+  	int POTE3 = analogRead(A2);
+    int POTE2 = analogRead(A3);
+    int POTE1 = analogRead(A4);
+  
+    int R = map(POTE1,0,1023,0,255);
+    int G = map(POTE2,0,1023,0,255);
+    int B = map(POTE3,0,1023,0,255);
+    pixels.show();
+  	pixels.setPixelColor(I, pixels.Color(R, G, B));
+	
+    while(Z==0)
+    {
+      lcd.setCursor(3, 0);
+      lcd.print("Ayudanos a");
+      lcd.setCursor(3, 1);
+      lcd.print("salvarlas!");
+      delay(1000);
+      lcd.clear();
+      Z++;
+    }
+    switch(I)
+    {
+  		  case 0:       
+    		lcd.setCursor(3, 0);
+      		lcd.print("Encontra a");
+      		lcd.setCursor(4, 1);
+            lcd.print("RAPHAEL");
+      		delay(300);
+            break;
+          case 1: 
+      		
+      		lcd.setCursor(3, 0);
+      		lcd.print("Encontra a");
+      		lcd.setCursor(4, 1);
+            lcd.print("DONATELLO");
+      		delay(300);
+            break;
+          case 2: 
+      		
+      		lcd.setCursor(3, 0);
+      		lcd.print("Encontra a");
+      		lcd.setCursor(4, 1);
+            lcd.print("LEONARDO");
+      		delay(300);
+            break;
+          case 3: 
+      	
+      		lcd.setCursor(3, 0);
+      		lcd.print("Encontra a");
+      		lcd.setCursor(2, 1);
+            lcd.print("MICHELANGELLO");
+      		delay(300);
+    }
+    
+      if(VALIDACION_RGB[0]==1)
+      {
+        pixels.setPixelColor(0, pixels.Color(255, 0, 0)); //ROJO
+        
+        if(VALIDACION_RGB[1]==1)
+        {
+          pixels.setPixelColor(1, pixels.Color(125, 33, 129)); // PURPURA
+
+          if(VALIDACION_RGB[2]==1)
+          {
+            pixels.setPixelColor(2, pixels.Color(12, 125, 242)); // CELESTE
+
+            if(VALIDACION_RGB[3]==1)
+            {
+              pixels.setPixelColor(3, pixels.Color(239, 127, 26)); // NARANJA
+              FIN = 1;
+            }
+          }
+        }
+      }
+      
+   
+      if(VALIDACION_RGB[0]== 0 && R<=255 && R > 220 && G < 40 && G >= 0 && B>= 0 && B < 40) // ROJO
+      {
+        VALIDACION_RGB[0] = 1;
+        I++;
+        VALIDACION_RGB[1]= 0;
+        lcd.clear();
+        lcd.setCursor(4, 0);
+        lcd.print("Salvaste");
+        lcd.setCursor(5, 1);
+        lcd.print("el BO!");
+        delay(2000);
+        lcd.clear();        
+      }
+      if(VALIDACION_RGB[1]== 0 && R<150 && R > 100 && G < 40 && G > 0 && B > 100 && B < 140) //PURPURA
+      {
+        VALIDACION_RGB[1] = 1;
+        I++;
+        VALIDACION_RGB[2]= 0;
+        lcd.clear();
+        lcd.setCursor(4, 0);
+        lcd.print("Salvaste");
+        lcd.setCursor(4, 1);
+        lcd.print("Los SAI!");
+        delay(2000);
+        lcd.clear();        
+      }
+        if(VALIDACION_RGB[2]== 0 && R<40 && R >= 0 && G < 150 && G > 110 && B > 220 && B <= 255) //CELESTE
+      {
+        VALIDACION_RGB[2] = 1;
+        I++;
+        VALIDACION_RGB[3]= 0;
+        lcd.clear();
+        lcd.setCursor(4, 0);
+        lcd.print("Salvaste ");
+        lcd.setCursor(3, 1);
+        lcd.print("Las KATANA!");
+        delay(2000);
+        lcd.clear();
+      }
+        if(VALIDACION_RGB[3]== 0 && R<= 255 && R > 220 && G < 160 && G > 90 && B >= 0 && B < 50) //NARANJA
+      {
+        VALIDACION_RGB[3] = 1;
+        I++;
+        lcd.clear();
+        lcd.setCursor(4, 0);
+        lcd.print("Salvaste");
+        lcd.setCursor(2, 1);
+        lcd.print("Los NUNCHAKU!");
+        delay(2000);
+        lcd.clear();        
+      }
+    } 
+    if(FIN == 1)
+    {
+      lcd.setCursor(1, 0);
+      lcd.print("A comer pizza");
+      lcd.setCursor(2, 1);
+      lcd.print("COWABUNGA!");
+      turtles();	
+      delay(8000);
+      lcd.clear();
+      puzzle2 = true;
+    }
+    delay(10);
+   }while(FIN == 0);
+}
+                
+                
+                
+ void puzzle_3(){
+ 
+  bool estado_KEY1 = digitalRead(KEY1);
+
+  int pote1= analogRead(A4);
+  int pitchMelodyNote = map(pote1,0,1023,1,6);
+  
+  int pote2= analogRead(A3);
+  int pitchNumberNote = map(pote2,0,1023,0,8);
+  
+
+
+  if (estado_KEY1==HIGH)
+  {
+      switch (pitchMelodyNote){
+        case 1:
+        melody[testNote] = NOTE_E5;
+        break;
+        case 2:
+        melody[testNote] = NOTE_DS5;
+        break;    
+        case 3:
+        melody[testNote] = NOTE_D5;
+        break;  
+        case 4:
+        melody[testNote] = NOTE_C5;
+        break;
+        case 5:
+        melody[testNote] = NOTE_B4;
+        break;
+        default:
+        melody[testNote] = NOTE_A4;
+  
+      }
+    
+      if (melody[testNote] == furElise[testNote])
+      {
+      pixels.clear();
+      pixels.setPixelColor(testNote+4,pixels.Color(0,152,70));
+      pixels.show();
+        
+      }else{
+        
+      pixels.clear();
+      pixels.setPixelColor(testNote+4,pixels.Color(255,0,0));
+      pixels.show();
+      }
+    
+  }else if (estado_KEY1==LOW){
+    
+      testNote=pitchNumberNote; 
+      
+      pixels.clear();
+      pixels.setPixelColor(testNote+4,pixels.Color(255,0,0));
+      pixels.show();
+            
+  }
+  
+}
+
+void turtles(){
+  
+   for (int thisNote = 0; thisNote <36; thisNote++) {
+
+    int noteDurationTurtles = 1000 / noteDurationsTurtles[thisNote];
+
+    tone(PIEZO, melodyTurtles[thisNote], noteDurationTurtles);
+
+    int pauseBetweenNotesTurtles = noteDurationTurtles * 1.3;
+
+    delay(pauseBetweenNotesTurtles);
+
+    noTone(PIEZO);
+
+    }
+}
+
+void melod(){
+  
+  int addVal=0;  	
+    
+    for (int thisNote = 0; thisNote <9; thisNote++) {
+
+    int noteDuration = 1000 / noteDurations[thisNote];
+
+    tone(PIEZO, melody[thisNote], noteDuration);
+
+    int pauseBetweenNotes = noteDuration * 1.3;
+
+    delay(pauseBetweenNotes);
+
+    noTone(PIEZO);
+
+    }
+  
+    for (int thisNote = 0; thisNote <9; thisNote++) 
+    {
+      
+      if (melody[thisNote]==furElise[thisNote])
+      {    
+        addVal++;
+      }
+ 	}
+    if (addVal==9)
+    {
+      for (int repeat = 0; repeat <5; repeat++){
+       
+        redColor = random(0, 255);
+      	greenColor = random(0,255);
+    	blueColor = random(0, 255);
+        
+        for (int winScale = 0; winScale <addVal+5; winScale++){
+            pixels.setPixelColor(winScale, pixels.Color(redColor, greenColor, blueColor));
+
+        pixels.show();
+    
+            delay(100);
+        }
+      }
+      puzzle3= true;
+    }
+}
