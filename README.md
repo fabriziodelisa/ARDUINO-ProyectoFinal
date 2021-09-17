@@ -15,3 +15,6 @@ abrirá la caja a través del servo motor.
 Creado por:
 De Lisa, Fabrizio.
 De Lorenzi, Lucas.
+
+Link al simulador virtual del proyecto: 
+https://www.tinkercad.com/things/7EMK77B8f92-proyecto-caja-china/editel?sharecode=3xN77a4WEA05JnGNv2WhLd-s7Nafm-FBardDXH6SpYM
