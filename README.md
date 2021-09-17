@@ -13,7 +13,7 @@ Finalmente, una vez logrados los 3 objetivos, se mostrará un mensaje de GANADOR
 abrirá la caja a través del servo motor.
 
 Creado por:
-Fabrizio De Lisa
+Fabrizio De Lisa, 
 Lucas De Lorenzi
 
 Link al simulador virtual del proyecto: 
